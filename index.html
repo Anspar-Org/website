@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anspar Foundation | Investing in Open Solutions & Education</title>
+    <meta name="description" content="A 501(c)(3) private foundation supporting open content, education, and community-driven initiatives since 2009.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-alt: #f9fafb;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .hero .meta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .meta-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .meta-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Section Styles */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        /* Project Filter */
+        .project-filters {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.4rem 1.25rem;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Project Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .project-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .project-image {
+            width: calc(100% + 2.5rem);
+            margin: -1.25rem -1.25rem 1rem -1.25rem;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 0.75rem 0.75rem 0 0;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .project-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .status-current {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-completed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-closed {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .project-date {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .project-partner {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .project-description {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Careers Section */
+        #careers {
+            background: var(--bg-alt);
+        }
+
+        #whr_embed_hook {
+            margin-top: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 2rem 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 1.5rem auto 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Icons */
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="#" class="logo">Anspar Foundation</a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#careers">Careers</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Investing in Open Solutions & Education</h1>
+        <p>A 501(c)(3) private foundation dedicated to supporting open content, educational innovation, and community-driven initiatives since 2009.</p>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-header">
+            <h2>Our Mission</h2>
+            <p>Supporting innovation in open content, education, and technology</p>
+        </div>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center; color: var(--text-light);">
+            <p style="margin-bottom: 1rem;">
+                Founded in 2009 as "The Lewis Charitable Foundation," the Anspar Foundation's mission has been to investigate and promote the costs and benefits of sharing intellectual property in creative contexts. We support research, educational programs, and community initiatives that advance open content, innovation, and accessibility.
+            </p>
+            <p>
+                Through grants and partnerships, we work with organizations and individuals to explore how open licenses and collaborative approaches can enhance creativity, education, and social impact. Our projects span education technology, game development research, health informatics and cultural programs.
+            </p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="section-header">
+            <h2>Our Projects</h2>
+            <p>Supporting innovation across education, technology, and open content</p>
+        </div>
+
+        <div class="project-filters">
+            <button class="filter-btn active" data-filter="all">All Projects</button>
+            <button class="filter-btn" data-filter="current">Current</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+            <button class="filter-btn" data-filter="closed">Closed</button>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be inserted here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Careers Section -->
+    <section id="careers">
+        <div class="section-header">
+            <h2>Join Our Team</h2>
+            <p>Help us build a more open and accessible future</p>
+        </div>
+        
+        <div style="max-width: 700px; margin: 0 auto 2rem; text-align: center;">
+            <p style="color: var(--text-light);">
+                We're always looking for talented individuals who share our passion for open content, 
+                education, and innovation. Explore our current opportunities below.
+            </p>
+        </div>
+
+        <!-- Workable Job Board Embed -->
+        <script src="https://www.workable.com/assets/embed.js" type="text/javascript"></script>
+        <script type="text/javascript" charset="utf-8">
+            whr(document).ready(() => {
+                whr_embed(714582, {"base":"jobs","detail":"descriptions","zoom":"country","grouping":"none"});
+            });
+        </script>
+        <div id="whr_embed_hook"></div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-header">
+            <h2>Get in Touch</h2>
+        </div>
+        
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <p style="color: var(--text-light); margin-bottom: 2rem;">
+                For grant inquiries, partnership opportunities, or general questions, please reach out to us at 
+                <a href="#" id="emailLink" style="color: var(--primary); font-weight: 500; text-decoration: none;">
+                    <span id="emailText"></span>
+                </a>
+            </p>
+        </div>
+        
+        <script>
+
+  		// Anti-spam email obfuscation
+		
+		function reverseString(str) {
+			return str.split('').reverse().join('');
+		}
+
+            (function() {
+                const user = 'ofni';
+                const domain = 'gro' + '.' + 'rapsna';
+                const email = reverseString(user) + '@' + reverseString(domain);
+                document.getElementById('emailText').textContent = email;
+                document.getElementById('emailLink').href = 'mailto:' + email;
+            })();
+        </script>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Anspar Foundation</h3>
+                <p>A 501(c)(3) private foundation supporting open content, education, and innovation since 2009.</p>
+                <p>EIN: 26-3604285</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#careers">Careers</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="https://projects.propublica.org/nonprofits/organizations/263604285" target="_blank">Tax Filings (ProPublica)</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Anspar Foundation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Project data
+        const projects = [
+            {
+                name: "Cure HHT App",
+                startDate: "September 2025",
+                partner: "Cure HHT",
+                description: "Bootstrapping a technology team for Cure HHT to develop a next-gen ePRO nosebleed diary app for HHT patients",
+                status: "current",
+                image: "Cure HHT App.png"
+            },
+            {
+                name: "Robotics Coaching",
+                startDate: "August 2025",
+                partner: "Coeur d'Alene Avenue Elementary School",
+                description: "Coaching and teaching engineering for after-school VEX IQ Robotics competition for grades 4-5",
+                status: "current",
+                image: "Robotics Coaching.png"
+            },
+            {
+                name: "Trepany Theater - Strings",
+                startDate: "May 2025",
+                partner: "Trepany Theater",
+                description: "Custom technology for nonprofit theater project.",
+                status: "completed",
+                image: "Trepany House Strings.jpg"
+            },
+            {
+                name: "WISE Lab",
+                startDate: "September 2024",
+                partner: "Coeur d'Alene Avenue Elementary",
+                description: "Wrote grant applications and used awards to build out the W.I.S.E. Lab (World of Imagination, Science and Engineering). Ran after-school programs for K-5, including programming, robotics, and theater tech.",
+                status: "completed",
+                image: "WISE Lab Anon.png"
+            },
+            {
+                name: "Alien Encounter",
+                startDate: "September 2024",
+                partner: "Trepany",
+                description: "Lighting design and rigging and custom-built technology for nonprofit interactive theater production.",
+                status: "completed",
+                image: "Alien Encounter.png"
+            },
+            {
+                name: "CFI West Theater Modernization",
+                startDate: "September 2024",
+                partner: "Center for Inquiry West",
+                description: "Helped design, build and configure modern live, streaming and recording system for nonprofit theater space.",
+                status: "completed",
+                image: "CFI West.png"
+            },
+            {
+                name: "Anyone's Game",
+                startDate: "February 2020",
+                partner: "Ringling School of Art and Design",
+                description: "Funding for the inaugural game development conference.",
+                status: "completed",
+                image: "Anyones Game.png"
+            },
+            {
+                name: "COVID-19 Relief Response",
+                startDate: "June 2020",
+                partner: "Various recipients",
+                description: "Over $500,000 in emergency grants for people critically impacted by the COVID-19 pandemic.",
+                status: "completed",
+                image: "COVID.png"
+            },
+            {
+                name: "Open Game Labs",
+                startDate: "August 2018 ",
+                partner: "Ringling School of Art and Design",
+                description: "Program to teach practical game development and research the impact of open-source development and content.",
+                status: "completed",
+                image: "OpenGameLabs.png"
+            },
+            {
+                name: "TOTO",
+                startDate: "October 2012",
+                partner: "University College Cork",
+                description: "Research grant for Technology-Enabled Organizational Transparency and Openness project studying organizational transparency.",
+                status: "completed",
+                image: "University College Cork.jpg"
+            },
+            {
+                name: "Mob Rules",
+                startDate: "October 2011",
+                partner: "Mob Rules Games LLC",
+                description: "Grant to develop public-benefit corporation for game development to research openness and transparency in fundraising and product development.",
+                status: "closed",
+                image: "Mob Rules Games.png"
+            },
+            {
+                name: "Secular Connect",
+                startDate: "July 2012",
+                partner: "Internal project",
+                description: "Online platform development for secular/atheist community networking, including groups, calendar features, and conference support for Atheist Alliance America 2013.",
+                status: "closed",
+                image: "Secular Connect.png"
+            },
+            {
+                name: "BMG Investment",
+                startDate: "March 2011",
+                partner: "Blue Mammoth Games",
+                description: "Investment in game developer with access to research opportunities.",
+                status: "positive return",
+                image: "Blue Mammoth Games.png"
+            },
+            {
+                name: "Sciflies",
+                startDate: "December 2009",
+                partner: "Sciflies",
+                description: "Grant to startup creating a cloud-funding platform for science projects",
+                status: "closed",
+                image: "Sciflies.png"
+            },
+            {
+                name: "LOIRP",
+                startDate: "December 2009",
+                partner: "Moonviews",
+                description: "Lunar Orbiter Image Recovery Project, digitizing the original 1966 and 1967 tapes",
+                status: "completed",
+                image: "LOIRP.png"
+            },
+            {
+                name: "SCA",
+                startDate: "December 2021",
+                partner: "Secular Coalition for America",
+                description: "Support for education regarding secular government principals.",
+                status: "completed",
+                image: "SCA.png"
+            },
+            {
+                name: "NSTIC Governance Working Group",
+                startDate: "August 2012",
+                partner: "Not specified",
+                description: "Participation in National Strategy for Trusted Identities in Cyberspace governance activities.",
+                status: "completed",
+                image: "NSTIC.png"
+            },
+            {
+                name: "Creative Commons",
+                startDate: "2009",
+                partner: "grantee",
+                description: "Support for Creative Commons licensing initiatives.",
+                status: "current",
+                image: "CC-BY.png"
+            },
+            {
+                name: "DonorsChoose",
+                startDate: "March 2011",
+                partner: "grantee",
+                description: "Educational donation platform support.",
+                status: "current",
+                image: "donorschoose_logo.png"
+            },
+            {
+                name: "HHT Foundation International",
+                startDate: "2010",
+                partner: "grantee",
+                description: "Support for Hereditary Hemorrhagic Telangiectasia research/awareness.",
+                status: "completed",
+                image: "Cure HHT.png"
+            }
+        ];
+
+	// Sort projects by year (descending by default)
+	function sortProjectsByYear(projectsArray, ascending = false) {
+	    return projectsArray.sort((a, b) => {
+        	// Extract year from startDate
+	        const yearA = parseInt(a.startDate.match(/\d{4}/)?.[0]) || 0;
+	        const yearB = parseInt(b.startDate.match(/\d{4}/)?.[0]) || 0;
+	        return ascending ? yearA - yearB : yearB - yearA;
+	    });
+	}
+
+        // Render projects
+        function renderProjects(filter = 'all') {
+            const grid = document.getElementById('projectsGrid');
+            grid.innerHTML = '';
+
+            let filteredProjects = filter === 'all' 
+                ? projects 
+                : projects.filter(p => p.status === filter);
+
+	    filteredProjects = sortProjectsByYear(filteredProjects, false);
+
+            filteredProjects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                
+                const statusClass = `status-${project.status}`;
+                const statusLabel = project.status.charAt(0).toUpperCase() + project.status.slice(1);
+                
+                card.innerHTML = `
+                    ${project.image ? `<img src="images/${project.image}" alt="${project.name}" class="project-image">` : ''}
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">${project.name}</h3>
+                        </div>
+                        <span class="project-status ${statusClass}">${statusLabel}</span>
+                    </div>
+                    <div class="project-meta">
+                        <span class="project-date">📅 ${project.startDate}</span>
+                    </div>
+                    ${project.partner !== 'Not specified' ? `
+                        <div class="project-meta">
+                            <span class="project-partner">🤝 ${project.partner}</span>
+                        </div>
+                    ` : ''}
+                    <p class="project-description">${project.description}</p>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProjects(btn.dataset.filter);
+            });
+        });
+
+        // Initial render
+        renderProjects();
+    </script>
+</body>
+</html>
