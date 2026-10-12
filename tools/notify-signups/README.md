@@ -4,7 +4,7 @@ The "Notify me" box on `/curehht-journal/` is a Netlify Form
 (`curehht-journal-notify`). For each verified submission:
 
 1. It appears in the Netlify dashboard under **Forms** (exportable as CSV).
-2. The Netlify function `netlify/functions/notify-signup-to-sheet.mts` sends
+2. The Netlify function `netlify/functions/submission-created.mts` sends
    the email to a Google Apps Script web app, which appends it to a Google
    Sheet (`Timestamp | Email | Source`). Duplicates are skipped.
 3. The Netlify App for Slack posts it to #marketing (see below).
@@ -21,7 +21,7 @@ The "Notify me" box on `/curehht-journal/` is a Netlify Form
    
    Click **Deploy**, approve the permissions prompt (it only needs access to
    this spreadsheet), and copy the **Web app URL** (ends in `/exec`).
-4. Set `DEFAULT_ENDPOINT` in `netlify/functions/notify-signup-to-sheet.mts`
+4. Set `DEFAULT_ENDPOINT` in `netlify/functions/submission-created.mts`
    to that URL and push, or set it as the `NOTIFY_SHEET_ENDPOINT`
    environment variable in Netlify (it overrides the default).
 5. Test it: submit your own email on the live page and confirm a row appears
@@ -31,7 +31,10 @@ If you later edit `Code.gs`, use **Deploy → Manage deployments → Edit → Ne
 version** so the URL stays the same.
 
 If a submission shows in Netlify but not in the sheet, check the
-`notify-signup-to-sheet` function logs in Netlify (**Logs → Functions**).
+`submission-created` function logs in Netlify (**Logs → Functions**). It
+logs "Signup copied to sheet" on success. If the submission is not there at
+all, look in the form's **Spam** tab: spam-flagged submissions never trigger
+the function or any notification.
 
 ## Slack alerts (#marketing)
 
