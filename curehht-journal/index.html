@@ -269,6 +269,13 @@
             background-color: var(--color-primary-dark);
         }
 
+        .notify-error {
+            display: none;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #D32F2F;
+        }
+
         .notify-done {
             display: none;
             font-size: 0.95rem;
@@ -950,8 +957,10 @@
                     <p class="notify-label">Leave your email and we'll let you know the day it goes live.</p>
                     <div class="notify-row" id="notifyRow">
                         <input type="email" id="notifyEmail" placeholder="you@organization.com" aria-label="Your email address">
+                        <input type="text" id="notifyWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
                         <button type="button" id="notifyBtn">Notify me</button>
                     </div>
+                    <p class="notify-error" id="notifyError">Something went wrong — please try again, or email <a href="mailto:info@anspar.org">info@anspar.org</a>.</p>
                     <p class="notify-done" id="notifyDone">Thanks — we'll be in touch when the app is live.</p>
                 </div>
             </div>
@@ -1171,21 +1180,64 @@
 })();
 
 (function () {
+    // Google Apps Script web app that appends signups to a Google Sheet.
+    // Setup instructions: tools/notify-signups/README.md
+    var NOTIFY_ENDPOINT = '';
+
     var btn = document.getElementById('notifyBtn');
     if (!btn) return;
-    btn.addEventListener('click', function () {
-        var input = document.getElementById('notifyEmail');
+    var input = document.getElementById('notifyEmail');
+    var errorEl = document.getElementById('notifyError');
+
+    function done() {
+        document.getElementById('notifyRow').style.display = 'none';
+        errorEl.style.display = 'none';
+        document.getElementById('notifyDone').style.display = 'block';
+    }
+
+    function submit() {
         var email = input.value.trim();
         if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
             input.focus();
             input.style.borderColor = '#D32F2F';
             return;
         }
-        window.location.href = 'mailto:info@anspar.org'
-            + '?subject=' + encodeURIComponent('Notify me when Cure HHT Journal launches')
-            + '&body=' + encodeURIComponent('Please let me know when Cure HHT Journal is available.\n\nEmail: ' + email);
-        document.getElementById('notifyRow').style.display = 'none';
-        document.getElementById('notifyDone').style.display = 'block';
+        input.style.borderColor = '';
+
+        if (!NOTIFY_ENDPOINT) {
+            window.location.href = 'mailto:info@anspar.org'
+                + '?subject=' + encodeURIComponent('Notify me when Cure HHT Journal launches')
+                + '&body=' + encodeURIComponent('Please let me know when Cure HHT Journal is available.\n\nEmail: ' + email);
+            done();
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        errorEl.style.display = 'none';
+        fetch(NOTIFY_ENDPOINT, {
+            method: 'POST',
+            body: new URLSearchParams({
+                email: email,
+                source: 'curehht-journal',
+                website: document.getElementById('notifyWebsite').value
+            })
+        })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (!data.ok) throw new Error(data.error || 'failed');
+                done();
+            })
+            .catch(function () {
+                btn.disabled = false;
+                btn.textContent = 'Notify me';
+                errorEl.style.display = 'block';
+            });
+    }
+
+    btn.addEventListener('click', submit);
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') submit();
     });
 })();
 </script>
