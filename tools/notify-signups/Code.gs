@@ -1,3 +1,5 @@
+/** @OnlyCurrentDoc */  // Limit this script's access to the sheet it's bound to.
+
 /**
  * "Notify me" signup collector for anspar.org.
  *
@@ -12,6 +14,9 @@ var SHEET_NAME = 'Signups';
 var MAX_SIGNUPS = 500;
 // Submissions sent sooner than this after page load are almost certainly bots.
 var MIN_ELAPSED_MS = 2000;
+// Deliberately strict: no characters like = ( " that could form a spreadsheet
+// formula. Keep in sync with the check in curehht-journal/index.html.
+var EMAIL_RE = /^[a-z0-9._%+'-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
 
 function doPost(e) {
   var p = (e && e.parameter) || {};
@@ -22,10 +27,10 @@ function doPost(e) {
   if (!(Number(p.elapsed) >= MIN_ELAPSED_MS)) return json_({ ok: true });
 
   var email = String(p.email || '').trim().toLowerCase();
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 254) {
+  if (!EMAIL_RE.test(email) || email.length > 254) {
     return json_({ ok: false, error: 'invalid_email' });
   }
-  var source = String(p.source || '').slice(0, 100);
+  var source = String(p.source || '').replace(/[^a-z0-9-]/gi, '').slice(0, 50);
 
   var lock = LockService.getScriptLock();
   lock.waitLock(10000);
@@ -37,11 +42,12 @@ function doPost(e) {
       var existing = sheet.getRange(2, 2, last - 1, 1).getValues();
       for (var i = 0; i < existing.length; i++) {
         if (String(existing[i][0]).toLowerCase() === email) {
-          return json_({ ok: true, duplicate: true });
+          return json_({ ok: true }); // don't reveal who is on the list
         }
       }
     }
-    sheet.appendRow([new Date(), email, source]);
+    // Leading apostrophe forces Sheets to store plain text, never a formula.
+    sheet.appendRow([new Date(), "'" + email, "'" + source]);
   } finally {
     lock.releaseLock();
   }

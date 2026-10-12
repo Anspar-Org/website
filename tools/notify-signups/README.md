@@ -48,3 +48,17 @@ can't grow the sheet without limit. Skim new rows before sending to the list.
 If junk still gets through, add [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/)
 (free, invisible CAPTCHA). It needs a site key on the page and a server-side
 verification call in `doPost` using `UrlFetchApp`.
+
+## Security notes
+
+The web app runs as you, but it only ever appends text to its own sheet. It
+never evaluates input, reads other files, or returns sheet contents.
+
+- `@OnlyCurrentDoc` limits its access to this one spreadsheet, not your
+  whole Drive.
+- Formula injection: emails must match a strict pattern with no `=`, `(`, `"`
+  and so on. Values are also written with a leading `'`, so Sheets always
+  stores them as plain text. The `source` field is reduced to letters,
+  digits and `-`.
+- The response is the same whether or not an address is already on the list,
+  so the endpoint can't be used to check who signed up.

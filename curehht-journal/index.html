@@ -1211,7 +1211,8 @@
 
     function submit() {
         var email = input.value.trim();
-        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        // Same rule as tools/notify-signups/Code.gs.
+        if (!/^[a-z0-9._%+'-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(email)) {
             input.focus();
             input.style.borderColor = '#D32F2F';
             return;
