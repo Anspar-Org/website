@@ -967,11 +967,14 @@
                 </div>
                 <div class="notify">
                     <p class="notify-label">Leave your email and we'll let you know the day it goes live.</p>
-                    <div class="notify-row" id="notifyRow">
-                        <input type="email" id="notifyEmail" placeholder="you@organization.com" aria-label="Your email address">
+                    <form class="notify-row" id="notifyRow" name="curehht-journal-notify" method="POST" data-netlify="true" netlify-honeypot="website">
+                        <input type="hidden" name="form-name" value="curehht-journal-notify">
+                        <input type="hidden" name="source" value="curehht-journal">
+                        <input type="hidden" name="elapsed" id="notifyElapsed" value="">
+                        <input type="email" name="email" id="notifyEmail" placeholder="you@organization.com" aria-label="Your email address" required>
                         <input type="text" id="notifyWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-                        <button type="button" id="notifyBtn">Notify me</button>
-                    </div>
+                        <button type="submit" id="notifyBtn">Notify me</button>
+                    </form>
                     <p class="notify-error" id="notifyError">Something went wrong — please try again, or email <a href="mailto:info@anspar.org">info@anspar.org</a>.</p>
                     <p class="notify-done" id="notifyDone">Thanks — we'll be in touch when the app is live.</p>
                     <p class="notify-privacy">We'll only use your email to tell you about the Cure HHT Journal launch. We won't share it, and you can ask us to remove it anytime at <a href="mailto:privacy@anspar.org">privacy@anspar.org</a>. See our <a href="/privacy/">Privacy Policy</a>.</p>
@@ -1193,23 +1196,23 @@
 })();
 
 (function () {
-    // Google Apps Script web app that appends signups to a Google Sheet.
-    // Setup instructions: tools/notify-signups/README.md
-    var NOTIFY_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyJZFP5Veip6zCy_doXcBUal57dZQ2N6KNAgsKf93bzsod6c18tO2A5D5Qxwd-uzN3b/exec';
-
+    // Submitted to Netlify Forms. A Netlify function then copies each signup
+    // to the Google Sheet. Setup instructions: tools/notify-signups/README.md
+    var form = document.getElementById('notifyRow');
+    if (!form) return;
     var btn = document.getElementById('notifyBtn');
-    if (!btn) return;
     var input = document.getElementById('notifyEmail');
     var errorEl = document.getElementById('notifyError');
     var loadedAt = Date.now();
 
     function done() {
-        document.getElementById('notifyRow').style.display = 'none';
+        form.style.display = 'none';
         errorEl.style.display = 'none';
         document.getElementById('notifyDone').style.display = 'block';
     }
 
-    function submit() {
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
         var email = input.value.trim();
         // Same rule as tools/notify-signups/Code.gs.
         if (!/^[a-z0-9._%+'-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(email)) {
@@ -1218,30 +1221,19 @@
             return;
         }
         input.style.borderColor = '';
-
-        if (!NOTIFY_ENDPOINT) {
-            window.location.href = 'mailto:info@anspar.org'
-                + '?subject=' + encodeURIComponent('Notify me when Cure HHT Journal launches')
-                + '&body=' + encodeURIComponent('Please let me know when Cure HHT Journal is available.\n\nEmail: ' + email);
-            done();
-            return;
-        }
+        input.value = email;
+        document.getElementById('notifyElapsed').value = String(Date.now() - loadedAt);
 
         btn.disabled = true;
         btn.textContent = 'Sending…';
         errorEl.style.display = 'none';
-        fetch(NOTIFY_ENDPOINT, {
+        fetch('/', {
             method: 'POST',
-            body: new URLSearchParams({
-                email: email,
-                source: 'curehht-journal',
-                elapsed: String(Date.now() - loadedAt),
-                website: document.getElementById('notifyWebsite').value
-            })
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(new FormData(form)).toString()
         })
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-                if (!data.ok) throw new Error(data.error || 'failed');
+            .then(function (res) {
+                if (!res.ok) throw new Error('failed');
                 done();
             })
             .catch(function () {
@@ -1249,11 +1241,6 @@
                 btn.textContent = 'Notify me';
                 errorEl.style.display = 'block';
             });
-    }
-
-    btn.addEventListener('click', submit);
-    input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') submit();
     });
 })();
 </script>
