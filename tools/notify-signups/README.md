@@ -33,3 +33,18 @@ version** so the URL stays the same.
   when the list outgrows this.
 
 Remember to honour unsubscribe requests by deleting the row.
+
+## Spam protection
+
+`Code.gs` quietly drops a submission if:
+
+- the hidden "website" honeypot field is filled in (bots fill every field);
+- it arrives less than 2 seconds after the page loaded, or without the page's
+  timing field (i.e. a bot posting straight to the endpoint);
+- the address is invalid or already on the list.
+
+It also stops accepting signups after `MAX_SIGNUPS` (500) rows, so a flood
+can't grow the sheet without limit. Skim new rows before sending to the list.
+If junk still gets through, add [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/)
+(free, invisible CAPTCHA). It needs a site key on the page and a server-side
+verification call in `doPost` using `UrlFetchApp`.

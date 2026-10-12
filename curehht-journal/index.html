@@ -276,6 +276,18 @@
             color: #D32F2F;
         }
 
+        .notify-privacy {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--color-text-muted);
+        }
+
+        .notify-privacy a {
+            color: inherit;
+            text-decoration: underline;
+        }
+
         .notify-done {
             display: none;
             font-size: 0.95rem;
@@ -962,6 +974,7 @@
                     </div>
                     <p class="notify-error" id="notifyError">Something went wrong — please try again, or email <a href="mailto:info@anspar.org">info@anspar.org</a>.</p>
                     <p class="notify-done" id="notifyDone">Thanks — we'll be in touch when the app is live.</p>
+                    <p class="notify-privacy">We'll only use your email to tell you about the Cure HHT Journal launch. We won't share it, and you can ask us to remove it anytime at <a href="mailto:privacy@anspar.org">privacy@anspar.org</a>. See our <a href="/privacy/">Privacy Policy</a>.</p>
                 </div>
             </div>
             <div class="hero-image-wrapper">
@@ -1188,6 +1201,7 @@
     if (!btn) return;
     var input = document.getElementById('notifyEmail');
     var errorEl = document.getElementById('notifyError');
+    var loadedAt = Date.now();
 
     function done() {
         document.getElementById('notifyRow').style.display = 'none';
@@ -1220,6 +1234,7 @@
             body: new URLSearchParams({
                 email: email,
                 source: 'curehht-journal',
+                elapsed: String(Date.now() - loadedAt),
                 website: document.getElementById('notifyWebsite').value
             })
         })
